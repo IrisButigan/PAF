@@ -11,13 +11,12 @@ def pravac(x1, y1, x2, y2):
     else:
         print("Pravac x = {}".format(x1))
     
-    x = np.linspace(0, 10, 100)
+    x = np.linspace(x1-5, x2+5, 200)
     y = a*x + b
 
     plt.title("Pravac kroz dvije točke")
     plt.xlabel("X-os")
     plt.ylabel("Y-os")
-
     plt.plot(x, y)
     plt.plot(x1, y1, marker="*")
     plt.plot(x2, y2, marker="*")
@@ -32,7 +31,5 @@ def pravac(x1, y1, x2, y2):
     else:
         print("Pogreška")
 
-
-    
 
 pravac(1,2,3,4)
