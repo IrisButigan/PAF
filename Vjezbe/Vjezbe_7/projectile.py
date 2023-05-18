@@ -32,13 +32,12 @@ class Projectile:
     def gibanje_euler(self):
         while self.y[-1] >= 0:
             self.__move_euler()
-            
+
     def a(self, v):
         av = -np.sign(v) * self.r * (v**2)
         return av
 
     def __move_rk4(self):
-
         k1vx = self.a(self.vx[-1]) * self.dt
         k1x = self.vx[-1] * self.dt
         k2vx = self.a(self.vx[-1] + k1vx/2) * self.dt
@@ -68,12 +67,3 @@ class Projectile:
     def gibanje_rk4(self):
         while self.y[-1] >= 0:
             self.__move_rk4()
-
-
-
-
-        
-
-    
-        
-    
