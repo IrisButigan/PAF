@@ -12,9 +12,8 @@ class Field:
 
     def start(self):
         self.t = [0]
-        #self.r = [[0,0,0]]
+        self.r = [[0,0,0]]
         self.v = self.v0
-        #self.a = [[0,0,0]]
         self.x = [0]
         self.y = [0]
         self.z = [0]
@@ -22,15 +21,37 @@ class Field:
     def __move(self):
         self.a = self.q * (self.E + np.cross(self.v, self.B)) / self.m
         self.v += self.a * self.dt
-        #self.r.append(self.r[-1] + self.v * self.dt)
-        self.x.append(self.x[-1] + self.v[0] * self.dt)
-        self.y.append(self.y[-1] + self.v[1] * self.dt)
-        self.z.append(self.z[-1] + self.v[2] * self.dt)
+        self.r.append(self.r[-1] + self.v * self.dt)
+        self.x.append(self.r[-1][0])
+        self.y.append(self.r[-1][1])
+        self.z.append(self.r[-1][2])
         self.t.append(self.t[-1] + self.dt)
 
-    def move_it(self, trajanje = 20):
+    def move_euler(self, trajanje = 20):
         self.start()
         while self.t[-1] <= trajanje:
             self.__move()
-         return self.x, self.y, self.z
-    
+        return self.x, self.y, self.z
+
+    def __move_rk4(self):
+        k1v = self.q * (self.E + np.cross(self.v, self.B)) / self.m * self.dt
+        k1 = self.v * self.dt
+        k2v = self.q * (self.E + np.cross((self.v + k1v/2), self.B)) / self.m * self.dt
+        k2 = (self.v + k1v/2) * self.dt  
+        k3v = self.q * (self.E + np.cross((self.v + k2v/2), self.B)) / self.m * self.dt
+        k3 = (self.v + k2v/2) * self.dt
+        k4v = self.q * (self.E + np.cross((self.v + k3/2), self.B)) / self.m * self.dt
+        k4 = (self.v + k3v/2) * self.dt
+
+        self.v += (k1v + 2*k2v + 2*k3v + k4v)/6
+        self.r.append(self.r[-1] + (k1 + 2*k2 + 2*k3 + k4)/6)
+        self.x.append(self.r[-1][0])
+        self.y.append(self.r[-1][1])
+        self.z.append(self.r[-1][2])
+        self.t.append(self.t[-1] + self.dt)
+
+    def move__rk(self, trajanje = 20):
+        self.start()
+        while self.t[-1] <= trajanje:
+            self.__move_rk4()
+        return self.x, self.y, self.z
